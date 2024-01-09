@@ -30,7 +30,7 @@ function Fight() {
   const [win, setWin] = useState(false);
 
   const reloadPage = () => {
-    window.location.reload();
+    window.location.href = window.location.href;
   };
 
   function getRandomInt(min, max) {
