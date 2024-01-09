@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 
 import characters from '../constants/characters';
-import bugImg from '../img/bug.png';
+import bugImg from '../../public/img/bug.png';
 
 const enemy = {
   hp: 30,
@@ -32,7 +32,7 @@ function Fight() {
 
   useEffect(() => {
     const fetchPlayerImage = async () => {
-      const importedImg = await import(`../img/${characters[id].img}`);
+      const importedImg = await import(`../../public/img/${characters[id].img}`);
       setPlayerImg(importedImg);
     };
 
