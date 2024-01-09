@@ -17,6 +17,7 @@ const enemy = {
 }
 
 function Fight() {
+  const [playerImg, setPlayerImg] = useState(null);
   const { id } = useParams();
   let navigate = useNavigate();
   const player = characters[id];
@@ -29,13 +30,25 @@ function Fight() {
   const [battleInfo, setBattleInfo] = useState("Please choose a move.");
   const [win, setWin] = useState(false);
 
+  useEffect(() => {
+    const fetchPlayerImage = async () => {
+      const importedImg = await import(`../img/${characters[id].img}`);
+      setPlayerImg(importedImg);
+    };
+
+    fetchPlayerImage();
+  }, [id]);
+
+ 
+
   function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min) + min); 
   }
 
-  function playerAttack(move) {
+  async function playerAttack(move) {
+    const playerImg = await import(`../img/${characters[id].img}`);
     let dice = getRandomInt(0, 20);
     let str = player.str;
     if (move == "Debuging") {
@@ -120,7 +133,7 @@ function Fight() {
 
         </Col>
         <Col>
-        <img src={process.env.PUBLIC_URL + "/img/" + characters[index].img} alt="character-img" />
+       {playerImg && <img src={playerImg.default} alt={characters[id].charName} />}
           <h5>{characters[id].charName}</h5>
           <div className="hp" style={{ width: playerPer + '%' }}>
           </div>
