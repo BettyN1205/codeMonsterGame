@@ -29,6 +29,10 @@ function Fight() {
   const [battleInfo, setBattleInfo] = useState("Please choose a move.");
   const [win, setWin] = useState(false);
 
+  const reloadPage = () => {
+    window.location.reload();
+  };
+
   function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -141,7 +145,7 @@ function Fight() {
             }
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <input type="button" value="Go Home" onClick={() => navigate('/')} />
-              <input type="button" value="Play Again" onClick={() => window.location.reload(false)} />
+              <input type="button" value="Play Again" onClick={reloadPage} />
             </div>
           </div>
           :
