@@ -9,7 +9,7 @@ const Home = () => {
     const index = parseInt(item.item, 10);
     return (
       <div className="char" onClick={() => navigate("/fight/" + item.item)}>
-        <img src={"/src/img/" + characters[index].img} alt="character-img" />
+        <img src={process.env.PUBLIC_URL + "/img/" + characters[index].img} alt="character-img" />
         <h5>{characters[index].charName}</h5>
         <p>
           HP: {characters[index].hp}

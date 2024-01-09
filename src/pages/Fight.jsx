@@ -120,7 +120,7 @@ function Fight() {
 
         </Col>
         <Col>
-          <img src={"/src/img/" + characters[id].img} />
+        <img src={process.env.PUBLIC_URL + "/img/" + characters[index].img} alt="character-img" />
           <h5>{characters[id].charName}</h5>
           <div className="hp" style={{ width: playerPer + '%' }}>
           </div>
