@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from 'react';
-
 import { Container, Row, Col } from 'react-bootstrap';
-
-import { useNavigate } from "react-router-dom";
-import {
-  useParams
-} from "react-router-dom";
-
+import { useNavigate, useParams } from "react-router-dom";
 import characters from '../constants/characters';
-import bugImg from '../../public/img/bug.png';
+import bugImg from '/img/bug.png';
 
 const enemy = {
   hp: 30,
   str: 7,
   def: 5
-}
+};
 
 function Fight() {
   const [playerImg, setPlayerImg] = useState(null);
@@ -32,26 +26,27 @@ function Fight() {
 
   useEffect(() => {
     const fetchPlayerImage = async () => {
-      const importedImg = await import(`../../public/img/${characters[id].img}`);
-      setPlayerImg(importedImg);
+      try {
+        const importedImg = await import(`../../img/${characters[id].img}`);
+        setPlayerImg(importedImg.default);
+      } catch (error) {
+        console.error('Error loading player image:', error);
+      }
     };
 
     fetchPlayerImage();
   }, [id]);
 
- 
-
   function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min) + min); 
+    return Math.floor(Math.random() * (max - min) + min);
   }
 
-  async function playerAttack(move) {
-    const playerImg = await import(`../img/${characters[id].img}`);
+  function playerAttack(move) {
     let dice = getRandomInt(0, 20);
     let str = player.str;
-    if (move == "Debuging") {
+    if (move === "Debuging") {
       dice += getRandomInt(1, 6);
       str -= getRandomInt(1, 3);
     } else {
@@ -61,7 +56,7 @@ function Fight() {
     if (dice > enemy.def) {
       //hit
       let newEnemyHP = enemyHP - str;
-      if (enemyHP <= 0) {
+      if (newEnemyHP <= 0) {
         //game over
         setBattleInfo("Game Over!");
         setEnemyPer(0);
@@ -70,7 +65,7 @@ function Fight() {
         return;
       } else {
         setEnemyHP(newEnemyHP);
-        setEnemyPer(newEnemyHP / enemy.hp * 100);
+        setEnemyPer((newEnemyHP / enemy.hp) * 100);
       }
       setBattleInfo("You hit for " + str);
     } else {
@@ -94,6 +89,8 @@ function Fight() {
       case 2:
         setBattleInfo("Please choose a move.");
         break;
+      default:
+        break;
     }
   }
 
@@ -112,7 +109,7 @@ function Fight() {
         return;
       } else {
         setPlayerHP(newPlayerHP);
-        setPlayerPer(newPlayerHP / player.hp * 100);
+        setPlayerPer((newPlayerHP / player.hp) * 100);
       }
       setBattleInfo("Code Monster hits for " + eStr);
     } else {
@@ -126,54 +123,49 @@ function Fight() {
       <h1>fight!</h1>
       <Row className="battlers">
         <Col>
-          <img src={bugImg} alt="bug"/>
+          <img src={bugImg} alt="bug" />
           <h5>codeMonster</h5>
-          <div className="hp" style={{ width: enemyPer + '%' }}>
-          </div>
-
+          <div className="hp" style={{ width: enemyPer + '%' }}></div>
         </Col>
         <Col>
-       {playerImg && <img src={playerImg.default} alt={characters[id].charName} />}
+          {playerImg && <img src={playerImg} alt={characters[id].charName} />}
           <h5>{characters[id].charName}</h5>
-          <div className="hp" style={{ width: playerPer + '%' }}>
-          </div>
+          <div className="hp" style={{ width: playerPer + '%' }}></div>
         </Col>
       </Row>
-      {
-        round == 3 ?
-          <div class="gameOver">
-            <h3>Game Over!</h3>
-            {
-              win ?
-                <p>You won! You are master on CODING.</p> :
-                <>
-                  <p>You lost!</p>
-                  <p>Keep learning! Don't give up! </p>
-
-                </>
-            }
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <input type="button" value="Go Home" onClick={() => navigate('/')} />
-              <input type="button" value="Play Again" onClick={() => window.location.reload(false)} />
-            </div>
+      {round === 3 ? (
+        <div className="gameOver">
+          <h3>Game Over!</h3>
+          {win ? (
+            <p>You won! You are a master of CODING.</p>
+          ) : (
+            <>
+              <p>You lost!</p>
+              <p>Keep learning! Don't give up! </p>
+            </>
+          )}
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <input type="button" value="Go Home" onClick={() => navigate('/')} />
+            <input type="button" value="Play Again" onClick={() => window.location.reload(false)} />
           </div>
-          :
-          <Row className="battlePanel">
-            <Col>
-              <p>{battleInfo}</p>
-            </Col>
-            <Col>
-              {
-                round == 0 ?
-                  <>
-                    <input type="button" value="Debuging" onClick={() => playerAttack("Debuging")} />
-                    <input type="button" value="Testing" onClick={() => playerAttack("Testing")} />
-                  </> :
-                  <input type="button" value="Continue" onClick={() => cont()} />
-              }
-            </Col>
-          </Row>
-      }
+        </div>
+      ) : (
+        <Row className="battlePanel">
+          <Col>
+            <p>{battleInfo}</p>
+          </Col>
+          <Col>
+            {round === 0 ? (
+              <>
+                <input type="button" value="Debuging" onClick={() => playerAttack("Debuging")} />
+                <input type="button" value="Testing" onClick={() => playerAttack("Testing")} />
+              </>
+            ) : (
+              <input type="button" value="Continue" onClick={() => cont()} />
+            )}
+          </Col>
+        </Row>
+      )}
     </div>
   );
 }
